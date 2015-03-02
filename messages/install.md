@@ -3,7 +3,6 @@ Quickly find lines that match a string or regular expression.
 To filter your file to lines that contain a string or match a regex:
 
   Edit > Line > Filter With Regex  (cmd + K  cmd + R)
-  Edit > Line > Filter OUT With Regex  (cmd + K  cmd + V)
   Edit > Line > Filter With String  (cmd + K  cmd + S)
 
 To fold your file to lines that contain a string or match a regex:

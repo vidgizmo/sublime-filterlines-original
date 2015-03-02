@@ -8,7 +8,7 @@ settings_path = 'Filter Lines.sublime-settings'
 
 class PromptFilterToLinesCommand(sublime_plugin.WindowCommand):
 
-    def run(self, search_type='string'):
+    def run(self, search_type = 'string'):
         self._run(search_type, "filter_to_lines", "Filter")
 
     def _run(self, search_type, filter_command, filter_verb):
@@ -16,31 +16,24 @@ class PromptFilterToLinesCommand(sublime_plugin.WindowCommand):
         self.filter_command = filter_command
         self.search_type = search_type
         if search_type == 'string':
-            prompt = "%s to lines %s: " % (filter_verb, 'containing')
-            self.invert_search = False
-        elif search_type == 'string_invert':
-            prompt = "%s to lines %s: " % (filter_verb, 'not containing')
-            self.invert_search = True
-        elif search_type == 'regex_invert':
-            prompt = "%s to lines %s: " % (filter_verb, 'not matching')
-            self.invert_search = True
+            prompt = "%s to lines %s: " % (filter_verb, 'not containing' if self.invert_search else 'containing')
         else:
-            prompt = "%s to lines %s: " % (filter_verb, 'matching')
-            self.invert_search = False
+            prompt = "%s to lines %s: " % (filter_verb, 'not matching' if self.invert_search else 'matching')
         sublime.active_window().show_input_panel(prompt, self.search_text, self.on_search_text_entered, None, None)
 
     def on_search_text_entered(self, search_text):
         self.search_text = search_text
         self.save_settings()
         if self.window.active_view():
-            self.window.active_view().run_command(self.filter_command, {
-                "needle": self.search_text, "search_type": self.search_type})
+            self.window.active_view().run_command(self.filter_command, { 
+                "needle": self.search_text, "search_type": self.search_type })
 
     def load_settings(self):
         self.settings = sublime.load_settings(settings_path)
         self.search_text = ""
         if self.settings.get('preserve_search', True):
             self.search_text = self.settings.get('latest_search', '')
+        self.invert_search = self.settings.get('invert_search', False)
 
     def save_settings(self):
         if self.settings.get('preserve_search', True):
@@ -51,6 +44,7 @@ class FilterToLinesCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, needle, search_type):
         settings = sublime.load_settings(settings_path)
+        self.invert_search = settings.get('invert_search', False)
         flags = self.get_search_flags(search_type, settings)
         lines = itertools.groupby(self.view.find_all(needle, flags), self.view.line)
         self.line_numbers = settings.get('line_numbers', False)

@@ -10,4 +10,3 @@ Contributors
 - Marc Schlaich (schlamar) for adding support for custom separators (Sublime Text 2 only)
 - grayhare for fixing filtering in place (Sublime Text 2 only)
 - skafian and purplelizard for suggesting source line numbers (Sublime Text 3 only)
-- Mike Burkett (vidgizmo) adding inverted search to top level
